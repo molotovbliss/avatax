@@ -41,3 +41,5 @@ var
 lib/**
 !lib/AvaTax/
 !lib/AvaTax/**
+!lib/OnePica/
+!lib/OnePica/**
