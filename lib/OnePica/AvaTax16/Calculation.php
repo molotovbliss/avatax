@@ -17,57 +17,14 @@
  */
 
 /**
- * Class OnePica_AvaTax16_Config
+ * Class OnePica_AvaTax16_Calculation
  */
-class OnePica_AvaTax16_Calculation
+class OnePica_AvaTax16_Calculation extends OnePica_AvaTax16_ResourceAbstract
 {
     /**
      * Url path for calculations
      */
     const CALCULATION_URL_PATH = '/calculations';
-
-    /**
-     * Config
-     *
-     * @var OnePica_AvaTax16_Config
-     */
-    protected $_config;
-
-    /**
-     * Construct
-     *
-     * @param OnePica_AvaTax16_Config $config
-     */
-    public function __construct($config)
-    {
-        $this->_config = $config;
-    }
-
-    /**
-     * Get config
-     *
-     * @return OnePica_AvaTax16_Config
-     */
-    public function getConfig()
-    {
-        return $this->_config;
-    }
-
-    /**
-     * Get Curl Object with headers from config
-     *
-     * @return OnePica_AvaTax16_IO_Curl
-     */
-    protected function _getCurlObjectWithHeaders()
-    {
-        $curl = new OnePica_AvaTax16_IO_Curl();
-        $config = $this->getConfig();
-        $curl->setHeader('Authorization', $config->getAuthorizationHeader());
-        $curl->setHeader('Accept', $config->getAcceptHeader());
-        $curl->setHeader('Content-Type', $config->getContentTypeHeader());
-        $curl->setHeader('User-Agent', $config->getUserAgent());
-        return $curl;
-    }
 
     /**
      * Create Calculation
