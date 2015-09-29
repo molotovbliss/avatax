@@ -100,8 +100,8 @@ class OnePica_AvaTax16_Calculation extends OnePica_AvaTax16_ResourceAbstract
         $result = null;
         if (is_array($data)) {
             foreach ($data as $dataItem) {
-                $listOfCalculations = new OnePica_AvaTax16_Calculation_ListOfCalculationsResponse();
-                $result[] = $listOfCalculations->fillData($dataItem);
+                $calculationListItem = new OnePica_AvaTax16_Calculation_ListItemResponse();
+                $result[] = $calculationListItem->fillData($dataItem);
             }
         }
         return $result;
