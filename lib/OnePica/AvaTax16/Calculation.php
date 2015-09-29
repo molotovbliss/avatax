@@ -21,10 +21,6 @@
  */
 class OnePica_AvaTax16_Calculation extends OnePica_AvaTax16_ResourceAbstract
 {
-    /**
-     * Url path for calculations
-     */
-    const CALCULATION_URL_PATH = '/calculations';
 
     /**
      * Create Calculation

@@ -22,12 +22,6 @@
 class OnePica_AvaTax16_Transaction extends OnePica_AvaTax16_ResourceAbstract
 {
     /**
-     * Url path for transactions
-     */
-    const TRANSACTION_URL_PATH = '/transactions';
-
-
-    /**
      * Create Transaction
      *
      * @param OnePica_AvaTax16_Document_Request $documentRequest
@@ -35,9 +29,46 @@ class OnePica_AvaTax16_Transaction extends OnePica_AvaTax16_ResourceAbstract
      */
     public function createTransaction($documentRequest)
     {
-        $curl = $this->_getCurlObjectWithHeaders();
         $postUrl = $this->_config->getBaseUrl() . self::TRANSACTION_URL_PATH;
         $postData = $documentRequest->toArray();
+        $curl = $this->_getCurlObjectWithHeaders();
+        $curl->post($postUrl, $postData);
+        $data = $curl->response;
+        return $data;
+    }
+
+    /**
+     * Create Transaction from Calculation
+     *
+     * @param string $transactionType
+     * @param string $documentCode
+     * @param bool $recalculate
+     * @param string $comment
+     * @return StdClass $data
+     */
+    public function createTransactionFromCalculation($transactionType, $documentCode, $recalculate = null,
+        $comment = null)
+    {
+        $config = $this->getConfig();
+        $postUrl = $config->getBaseUrl()
+            . self::CALCULATION_URL_PATH
+            . '/account/'
+            . $config->getAccountId()
+            . '/company/'
+            . $config->getCompanyCode()
+            . '/'
+            . $transactionType
+            . '/'
+            . $documentCode
+            . self::TRANSACTION_URL_PATH;
+
+        $postData = array(
+            'recalculate' => $recalculate,
+            'documentCode' => $documentCode,
+            'comment' => $comment
+        );
+
+        $curl = $this->_getCurlObjectWithHeaders();
         $curl->post($postUrl, $postData);
         $data = $curl->response;
         return $data;
