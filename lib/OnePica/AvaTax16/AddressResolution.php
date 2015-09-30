@@ -25,7 +25,7 @@ class OnePica_AvaTax16_AddressResolution extends OnePica_AvaTax16_ResourceAbstra
      * Resolve a Single Address
      *
      * @param OnePica_AvaTax16_Document_Part_Location_Address $address
-     * @return StdClass $data
+     * @return OnePica_AvaTax16_AddressResolution_ResolveSingleAddressResponse $result
      */
     public function resolveSingleAddress($address)
     {
@@ -42,6 +42,8 @@ class OnePica_AvaTax16_AddressResolution extends OnePica_AvaTax16_ResourceAbstra
         $curl = $this->_getCurlObjectWithHeaders();
         $curl->post($postUrl, $postData);
         $data = $curl->response;
-        return $data;
+        $result = new OnePica_AvaTax16_AddressResolution_ResolveSingleAddressResponse();
+        $result->fillData($data);
+        return $result;
     }
 }
