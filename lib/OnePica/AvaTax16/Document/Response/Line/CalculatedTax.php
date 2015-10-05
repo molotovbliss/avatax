@@ -17,9 +17,9 @@
  */
 
 /**
- * Class OnePica_AvaTax16_Document_Request
+ * Class OnePica_AvaTax16_Document_Response_Line_CalculatedTax
  */
-class OnePica_AvaTax16_Document_Request extends OnePica_AvaTax16_Document_Part
+class OnePica_AvaTax16_Document_Response_Line_CalculatedTax extends OnePica_AvaTax16_Document_Part
 {
     /**
      * Types of complex properties
@@ -27,36 +27,34 @@ class OnePica_AvaTax16_Document_Request extends OnePica_AvaTax16_Document_Part
      * @var array
      */
     protected $_propertyComplexTypes = array(
-        '_header' => array(
-            'type' => 'OnePica_AvaTax16_Document_Request_Header'
-        ),
-        '_lines' => array(
-            'type' => 'OnePica_AvaTax16_Document_Request_Line',
+        '_taxByType' => array(
+            'type' => 'OnePica_AvaTax16_Document_Response_Line_CalculatedTax_TaxByType',
             'isArrayOf' => 'true'
         ),
-        '_feedback' => array(
-            'type' => 'OnePica_AvaTax16_Document_Part_Feedback'
-        ),
+        '_details' => array(
+            'type' => 'OnePica_AvaTax16_Document_Response_Line_CalculatedTax_Details',
+            'isArrayOf' => 'true'
+        )
     );
 
     /**
-     * Header
+     * Tax By Type
      *
-     * @var OnePica_AvaTax16_Document_Request_Header
+     * @var OnePica_AvaTax16_Document_Response_Line_CalculatedTax_TaxByType[]
      */
-    protected $_header;
+    protected $_taxByType;
 
     /**
-     * Lines
+     * Tax
      *
-     * @var OnePica_AvaTax16_Document_Request_Line[]
+     * @var float
      */
-    protected $_lines;
+    protected $_tax;
 
     /**
-     * Feedback
+     * Details
      *
-     * @var OnePica_AvaTax16_Document_Part_Feedback
+     * @var OnePica_AvaTax16_Document_Response_Line_CalculatedTax_Details[]
      */
-    protected $_feedback;
+    protected $_details;
 }

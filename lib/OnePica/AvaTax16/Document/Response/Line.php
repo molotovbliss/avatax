@@ -17,9 +17,9 @@
  */
 
 /**
- * Class OnePica_AvaTax16_Document_Part_Line
+ * Class OnePica_AvaTax16_Document_Response_Line
  */
-class OnePica_AvaTax16_Document_Part_Line extends OnePica_AvaTax16_Document_Part
+class OnePica_AvaTax16_Document_Response_Line extends OnePica_AvaTax16_Document_Part
 {
     /**
      * Required properties
@@ -27,6 +27,21 @@ class OnePica_AvaTax16_Document_Part_Line extends OnePica_AvaTax16_Document_Part
      * @var array
      */
     protected $_requiredProperties = array('_lineCode', '_extendedAmount');
+
+    /**
+     * Types of complex properties
+     *
+     * @var array
+     */
+    protected $_propertyComplexTypes = array(
+        '_locations' => array(
+            'type' => 'OnePica_AvaTax16_Document_Part_Location',
+            'isArrayOf' => 'true'
+        ),
+        '_calculatedTax' => array(
+            'type' => 'OnePica_AvaTax16_Document_Response_Line_CalculatedTax',
+        ),
+    );
 
     /**
      * Line Code
@@ -65,12 +80,26 @@ class OnePica_AvaTax16_Document_Part_Line extends OnePica_AvaTax16_Document_Part
     protected $_quantity;
 
     /**
+     * Number Of Items
+     *
+     * @var float
+     */
+    protected $_numberOfItems;
+
+    /**
      * Extended Amount
      * (Required)
      *
      * @var float
      */
     protected $_extendedAmount;
+
+    /**
+     * Line Amount
+     *
+     * @var float
+     */
+    protected $_lineAmount;
 
     /**
      * Item Description
@@ -90,7 +119,7 @@ class OnePica_AvaTax16_Document_Part_Line extends OnePica_AvaTax16_Document_Part
     /**
      * Locations
      *
-     * @var OnePica_AvaTax16_Document_Part_Locations
+     * @var OnePica_AvaTax16_Document_Part_Location[]
      */
     protected $_locations;
 
@@ -101,6 +130,30 @@ class OnePica_AvaTax16_Document_Part_Line extends OnePica_AvaTax16_Document_Part
      * @var string
      */
     protected $_taxPayerCode;
+
+    /**
+     * Use Type
+     * (Not currently supported)
+     *
+     * @var string
+     */
+    protected $_useType;
+
+    /**
+     * Buyer Type
+     * (Not currently supported)
+     *
+     * @var string
+     */
+    protected $_buyerType;
+
+    /**
+     * Line Attributes
+     * (Not currently supported)
+     *
+     * @var string
+     */
+    protected $_lineAttributes;
 
     /**
      * Entity Use Type
@@ -137,7 +190,52 @@ class OnePica_AvaTax16_Document_Part_Line extends OnePica_AvaTax16_Document_Part
      * Calculated Tax
      * (Only response)
      *
-     * @var OnePica_AvaTax16_Document_Part_Line_CalculatedTax
+     * @var OnePica_AvaTax16_Document_Response_Line_CalculatedTax
      */
     protected $_calculatedTax;
+
+    /**
+     * Nature
+     *
+     * @var string
+     */
+    protected $_nature;
+
+    /**
+     * State
+     *
+     * @var string
+     */
+    protected $_state;
+
+    /**
+     * Domain
+     *
+     * @var string
+     */
+    protected $_domain;
+
+    /**
+     * Domain
+     *
+     * @var string
+     */
+    protected $_form;
+
+    /**
+     * Set Metadata
+     *
+     * @param array|StdClass $value
+     * @return $this
+     */
+    public function setMetadata($value)
+    {
+        if ($value instanceof StdClass) {
+            // convert object data to array
+            // it is used during filling data from response
+            $this->_metadata = (array) $value;
+        } else {
+            $this->_metadata = $value;
+        }
+    }
 }

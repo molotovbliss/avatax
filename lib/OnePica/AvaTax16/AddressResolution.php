@@ -41,7 +41,7 @@ class OnePica_AvaTax16_AddressResolution extends OnePica_AvaTax16_ResourceAbstra
         $postData = $address->toArray();
         $curl = $this->_getCurlObjectWithHeaders();
         $curl->post($postUrl, $postData);
-        $data = $curl->response;
+        $data = $curl->getResponse();
         $result = new OnePica_AvaTax16_AddressResolution_ResolveSingleAddressResponse();
         $result->fillData($data);
         return $result;

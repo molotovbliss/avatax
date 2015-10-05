@@ -17,14 +17,8 @@
  */
 
 /**
- * Class OnePica_AvaTax16_Document_Part_Feedback
+ * Class OnePica_AvaTax16_Exception
  */
-class OnePica_AvaTax16_Document_Part_Feedback extends OnePica_AvaTax16_Document_Part
+class OnePica_AvaTax16_Exception extends Exception
 {
-    /**
-     * Latency Data
-     *
-     * @var OnePica_AvaTax16_Document_Part_Feedback_LatencyData
-     */
-    protected $_latencyData;
 }

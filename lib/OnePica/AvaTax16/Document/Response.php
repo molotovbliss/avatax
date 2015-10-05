@@ -17,9 +17,9 @@
  */
 
 /**
- * Class OnePica_AvaTax16_Document_Request
+ * Class OnePica_AvaTax16_Document_Response
  */
-class OnePica_AvaTax16_Document_Request extends OnePica_AvaTax16_Document_Part
+class OnePica_AvaTax16_Document_Response extends OnePica_AvaTax16_Document_Part
 {
     /**
      * Types of complex properties
@@ -28,30 +28,43 @@ class OnePica_AvaTax16_Document_Request extends OnePica_AvaTax16_Document_Part
      */
     protected $_propertyComplexTypes = array(
         '_header' => array(
-            'type' => 'OnePica_AvaTax16_Document_Request_Header'
+            'type' => 'OnePica_AvaTax16_Document_Response_Header'
         ),
         '_lines' => array(
-            'type' => 'OnePica_AvaTax16_Document_Request_Line',
+            'type' => 'OnePica_AvaTax16_Document_Response_Line',
             'isArrayOf' => 'true'
+        ),
+        '_calculatedTaxSummary' => array(
+            'type' => 'OnePica_AvaTax16_Document_Response_CalculatedTaxSummary'
         ),
         '_feedback' => array(
             'type' => 'OnePica_AvaTax16_Document_Part_Feedback'
+        ),
+        '_processingInfo' => array(
+            'type' => 'OnePica_AvaTax16_Document_Response_ProcessingInfo'
         ),
     );
 
     /**
      * Header
      *
-     * @var OnePica_AvaTax16_Document_Request_Header
+     * @var OnePica_AvaTax16_Document_Response_Header
      */
     protected $_header;
 
     /**
      * Lines
      *
-     * @var OnePica_AvaTax16_Document_Request_Line[]
+     * @var OnePica_AvaTax16_Document_Response_Line[]
      */
     protected $_lines;
+
+    /**
+     * Calculated Tax Summary
+     *
+     * @var OnePica_AvaTax16_Document_Response_CalculatedTaxSummary
+     */
+    protected $_calculatedTaxSummary;
 
     /**
      * Feedback
@@ -59,4 +72,11 @@ class OnePica_AvaTax16_Document_Request extends OnePica_AvaTax16_Document_Part
      * @var OnePica_AvaTax16_Document_Part_Feedback
      */
     protected $_feedback;
+
+    /**
+     * Processing Info
+     *
+     * @var OnePica_AvaTax16_Document_Response_ProcessingInfo
+     */
+    protected $_processingInfo;
 }

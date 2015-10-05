@@ -36,210 +36,210 @@ class OnePica_AvaTax16_IO_Curl
      *
      * @var resource
      */
-    public $curl;
+    protected $_curl;
 
     /**
      * Id
      *
      * @var string
      */
-    public $id = null;
+    protected $_id = null;
 
     /**
      * Error
      *
      * @var bool
      */
-    public $error = false;
+    protected $_error = false;
 
     /**
      * Error code
      *
      * @var int
      */
-    public $errorCode = 0;
+    protected $_errorCode = 0;
 
     /**
      * Error message
      *
      * @var string
      */
-    public $errorMessage = null;
+    protected $_errorMessage = null;
 
     /**
      * Curl error
      *
      * @var bool
      */
-    public $curlError = false;
+    protected $_curlError = false;
 
     /**
      * Curl error code
      *
      * @var int
      */
-    public $curlErrorCode = 0;
+    protected $_curlErrorCode = 0;
 
     /**
      * Curl error message
      *
      * @var string
      */
-    public $curlErrorMessage = null;
+    protected $_curlErrorMessage = null;
 
     /**
      * Http error
      *
      * @var bool
      */
-    public $httpError = false;
+    protected $_httpError = false;
 
     /**
      * Http status code
      *
      * @var int
      */
-    public $httpStatusCode = 0;
+    protected $_httpStatusCode = 0;
 
     /**
      * Http error message
      *
      * @var string
      */
-    public $httpErrorMessage = null;
+    protected $_httpErrorMessage = null;
 
     /**
      * Base url
      *
      * @var string
      */
-    public $baseUrl = null;
+    protected $_baseUrl = null;
 
     /**
      * Url
      *
      * @var string
      */
-    public $url = null;
+    protected $_url = null;
 
     /**
      * Request headers
      *
      * @var array
      */
-    public $requestHeaders = null;
+    protected $_requestHeaders = null;
 
     /**
      * Response headers
      *
      * @var array
      */
-    public $responseHeaders = null;
+    protected $_responseHeaders = null;
 
     /**
      * Raw response headers
      *
      * @var string
      */
-    public $rawResponseHeaders = '';
+    protected $_rawResponseHeaders = '';
 
     /**
      * Response
      *
-     * @var object
+     * @var mixed
      */
-    public $response = null;
+    protected $_response = null;
 
     /**
      * Raw response
      *
      * @var string
      */
-    public $rawResponse = null;
+    protected $_rawResponse = null;
 
     /**
      * Before send function
      *
      * @var string
      */
-    public $beforeSendFunction = null;
+    protected $_beforeSendFunction = null;
 
     /**
      * Download complete function
      *
      * @var string
      */
-    public $downloadCompleteFunction = null;
+    protected $_downloadCompleteFunction = null;
 
     /**
      * Success function
      *
      * @var string
      */
-    private $successFunction = null;
+    protected $_successFunction = null;
 
     /**
      * Error function
      *
      * @var string
      */
-    private $errorFunction = null;
+    protected $_errorFunction = null;
 
     /**
      * Complete function
      *
      * @var string
      */
-    private $completeFunction = null;
+    protected $_completeFunction = null;
 
     /**
      * Cookies
      *
      * @var array
      */
-    private $cookies = array();
+    protected $_cookies = array();
 
     /**
      * Response cookies
      *
      * @var array
      */
-    private $responseCookies = array();
+    protected $_responseCookies = array();
 
     /**
      * Headers
      *
      * @var array
      */
-    private $headers = array();
+    protected $_headers = array();
 
     /**
      * Options
      *
      * @var array
      */
-    private $options = array();
+    protected $_options = array();
 
     /**
      * Options
      *
      * @var function
      */
-    private $jsonDecoder = null;
+    protected $_jsonDecoder = null;
 
     /**
      * Json pattern
      *
      * @var string
      */
-    private $jsonPattern = '/^(?:application|text)\/(?:[a-z]+(?:[\.-][0-9a-z]+){0,}[\+\.]|x-)?json(?:-[a-z]+)?/i';
+    protected $_jsonPattern = '/^(?:application|text)\/(?:[a-z]+(?:[\.-][0-9a-z]+){0,}[\+\.]|x-)?json(?:-[a-z]+)?/i';
 
     /**
      * XML pattern
      *
      * @var string
      */
-    private $xmlPattern = '~^(?:text/|application/(?:atom\+|rss\+)?)xml~i';
+    protected $_xmlPattern = '~^(?:text/|application/(?:atom\+|rss\+)?)xml~i';
 
     /**
      * Construct
@@ -254,27 +254,16 @@ class OnePica_AvaTax16_IO_Curl
             throw new \ErrorException('cURL library is not loaded');
         }
 
-        $this->curl = curl_init();
-        $this->id = 1;
+        $this->_curl = curl_init();
+        $this->_id = 1;
         $this->setDefaultUserAgent();
         $this->setDefaultJsonDecoder();
         $this->setDefaultTimeout();
         $this->setOpt(CURLINFO_HEADER_OUT, true);
         $this->setOpt(CURLOPT_HEADERFUNCTION, array($this, 'headerCallback'));
         $this->setOpt(CURLOPT_RETURNTRANSFER, true);
-        $this->headers = new CaseInsensitiveArray();
+        $this->_headers = new OnePica_AvaTax16_IO_CaseInsensitiveArray();
         $this->setURL($base_url);
-    }
-
-    /**
-     * Before Send
-     *
-     * @access public
-     * @param  $callback
-     */
-    public function beforeSend($callback)
-    {
-        $this->beforeSendFunction = $callback;
     }
 
     /**
@@ -289,8 +278,8 @@ class OnePica_AvaTax16_IO_Curl
     {
         if (is_array($data)) {
             if (self::is_array_multidim($data)) {
-                if (isset($this->headers['Content-Type']) &&
-                    preg_match($this->jsonPattern, $this->headers['Content-Type'])) {
+                if (isset($this->_headers['Content-Type']) &&
+                    preg_match($this->_jsonPattern, $this->_headers['Content-Type'])) {
                     $json_str = json_encode($data);
                     if (!($json_str === false)) {
                         $data = $json_str;
@@ -320,8 +309,8 @@ class OnePica_AvaTax16_IO_Curl
                 }
 
                 if (!$binary_data) {
-                    if (isset($this->headers['Content-Type']) &&
-                        preg_match($this->jsonPattern, $this->headers['Content-Type'])) {
+                    if (isset($this->_headers['Content-Type']) &&
+                        preg_match($this->_jsonPattern, $this->_headers['Content-Type'])) {
                         $json_str = json_encode($data);
                         if (!($json_str === false)) {
                             $data = $json_str;
@@ -358,11 +347,11 @@ class OnePica_AvaTax16_IO_Curl
      */
     public function close()
     {
-        if (is_resource($this->curl)) {
-            curl_close($this->curl);
+        if (is_resource($this->_curl)) {
+            curl_close($this->_curl);
         }
-        $this->options = null;
-        $this->jsonDecoder = null;
+        $this->_options = null;
+        $this->_jsonDecoder = null;
     }
 
     /**
@@ -373,7 +362,7 @@ class OnePica_AvaTax16_IO_Curl
      */
     public function complete($callback)
     {
-        $this->completeFunction = $callback;
+        $this->_completeFunction = $callback;
     }
 
     /**
@@ -403,7 +392,7 @@ class OnePica_AvaTax16_IO_Curl
         if (is_array($url)) {
             $data = $query_parameters;
             $query_parameters = $url;
-            $url = $this->baseUrl;
+            $url = $this->_baseUrl;
         }
 
         $this->setURL($url, $query_parameters);
@@ -420,10 +409,10 @@ class OnePica_AvaTax16_IO_Curl
      */
     public function downloadComplete($fh)
     {
-        if (!$this->error && $this->downloadCompleteFunction) {
+        if (!$this->_error && $this->_downloadCompleteFunction) {
             rewind($fh);
-            $this->call($this->downloadCompleteFunction, $fh);
-            $this->downloadCompleteFunction = null;
+            $this->call($this->_downloadCompleteFunction, $fh);
+            $this->_downloadCompleteFunction = null;
         }
 
         if (is_resource($fh)) {
@@ -459,7 +448,7 @@ class OnePica_AvaTax16_IO_Curl
     public function download($url, $mixed_filename)
     {
         if (is_callable($mixed_filename)) {
-            $this->downloadCompleteFunction = $mixed_filename;
+            $this->_downloadCompleteFunction = $mixed_filename;
             $fh = tmpfile();
         } else {
             $filename = $mixed_filename;
@@ -470,7 +459,7 @@ class OnePica_AvaTax16_IO_Curl
         $this->get($url);
         $this->downloadComplete($fh);
 
-        return ! $this->error;
+        return ! $this->_error;
     }
 
     /**
@@ -481,7 +470,7 @@ class OnePica_AvaTax16_IO_Curl
      */
     public function error($callback)
     {
-        $this->errorFunction = $callback;
+        $this->_errorFunction = $callback;
     }
 
     /**
@@ -494,46 +483,46 @@ class OnePica_AvaTax16_IO_Curl
      */
     public function exec($ch = null)
     {
-        $this->responseCookies = array();
+        $this->_responseCookies = array();
         if (!($ch === null)) {
-            $this->rawResponse = curl_multi_getcontent($ch);
+            $this->_rawResponse = curl_multi_getcontent($ch);
         } else {
-            $this->call($this->beforeSendFunction);
-            $this->rawResponse = curl_exec($this->curl);
-            $this->curlErrorCode = curl_errno($this->curl);
+            $this->call($this->_beforeSendFunction);
+            $this->_rawResponse = curl_exec($this->_curl);
+            $this->_curlErrorCode = curl_errno($this->_curl);
         }
-        $this->curlErrorMessage = curl_error($this->curl);
-        $this->curlError = !($this->curlErrorCode === 0);
-        $this->httpStatusCode = curl_getinfo($this->curl, CURLINFO_HTTP_CODE);
-        $this->httpError = in_array(floor($this->httpStatusCode / 100), array(4, 5));
-        $this->error = $this->curlError || $this->httpError;
-        $this->errorCode = $this->error ? ($this->curlError ? $this->curlErrorCode : $this->httpStatusCode) : 0;
+        $this->_curlErrorMessage = curl_error($this->_curl);
+        $this->_curlError = !($this->_curlErrorCode === 0);
+        $this->_httpStatusCode = curl_getinfo($this->_curl, CURLINFO_HTTP_CODE);
+        $this->_httpError = in_array(floor($this->_httpStatusCode / 100), array(4, 5));
+        $this->_error = $this->_curlError || $this->_httpError;
+        $this->_errorCode = $this->_error ? ($this->_curlError ? $this->_curlErrorCode : $this->_httpStatusCode) : 0;
 
         // NOTE: CURLINFO_HEADER_OUT set to true is required for requestHeaders
         // to not be empty (e.g. $curl->setOpt(CURLINFO_HEADER_OUT, true);).
         if ($this->getOpt(CURLINFO_HEADER_OUT) === true) {
-            $this->requestHeaders = $this->parseRequestHeaders(curl_getinfo($this->curl, CURLINFO_HEADER_OUT));
+            $this->_requestHeaders = $this->_parseRequestHeaders(curl_getinfo($this->_curl, CURLINFO_HEADER_OUT));
         }
-        $this->responseHeaders = $this->parseResponseHeaders($this->rawResponseHeaders);
-        list($this->response, $this->rawResponse) = $this->parseResponse($this->responseHeaders, $this->rawResponse);
+        $this->_responseHeaders = $this->_parseResponseHeaders($this->_rawResponseHeaders);
+        list($this->_response, $this->_rawResponse) = $this->_parseResponse($this->_responseHeaders, $this->_rawResponse);
 
-        $this->httpErrorMessage = '';
-        if ($this->error) {
-            if (isset($this->responseHeaders['Status-Line'])) {
-                $this->httpErrorMessage = $this->responseHeaders['Status-Line'];
+        $this->_httpErrorMessage = '';
+        if ($this->_error) {
+            if (isset($this->_responseHeaders['Status-Line'])) {
+                $this->_httpErrorMessage = $this->_responseHeaders['Status-Line'];
             }
         }
-        $this->errorMessage = $this->curlError ? $this->curlErrorMessage : $this->httpErrorMessage;
+        $this->_errorMessage = $this->_curlError ? $this->_curlErrorMessage : $this->_httpErrorMessage;
 
-        if (!$this->error) {
-            $this->call($this->successFunction);
+        if (!$this->_error) {
+            $this->call($this->_successFunction);
         } else {
-            $this->call($this->errorFunction);
+            $this->call($this->_errorFunction);
         }
 
-        $this->call($this->completeFunction);
+        $this->call($this->_completeFunction);
 
-        return $this->response;
+        return $this->_response;
     }
 
     /**
@@ -549,7 +538,7 @@ class OnePica_AvaTax16_IO_Curl
     {
         if (is_array($url)) {
             $data = $url;
-            $url = $this->baseUrl;
+            $url = $this->_baseUrl;
         }
         $this->setURL($url, $data);
         $this->setOpt(CURLOPT_CUSTOMREQUEST, 'GET');
@@ -567,7 +556,7 @@ class OnePica_AvaTax16_IO_Curl
      */
     public function getOpt($option)
     {
-        return $this->options[$option];
+        return $this->_options[$option];
     }
 
     /**
@@ -583,7 +572,7 @@ class OnePica_AvaTax16_IO_Curl
     {
         if (is_array($url)) {
             $data = $url;
-            $url = $this->baseUrl;
+            $url = $this->_baseUrl;
         }
         $this->setURL($url, $data);
         $this->setOpt(CURLOPT_CUSTOMREQUEST, 'HEAD');
@@ -603,9 +592,9 @@ class OnePica_AvaTax16_IO_Curl
     public function headerCallback($ch, $header)
     {
         if (preg_match('/^Set-Cookie:\s*([^=]+)=([^;]+)/mi', $header, $cookie) == 1) {
-            $this->responseCookies[$cookie[1]] = $cookie[2];
+            $this->_responseCookies[$cookie[1]] = $cookie[2];
         }
-        $this->rawResponseHeaders .= $header;
+        $this->_rawResponseHeaders .= $header;
         return strlen($header);
     }
 
@@ -622,7 +611,7 @@ class OnePica_AvaTax16_IO_Curl
     {
         if (is_array($url)) {
             $data = $url;
-            $url = $this->baseUrl;
+            $url = $this->_baseUrl;
         }
         $this->setURL($url, $data);
         $this->unsetHeader('Content-Length');
@@ -643,7 +632,7 @@ class OnePica_AvaTax16_IO_Curl
     {
         if (is_array($url)) {
             $data = $url;
-            $url = $this->baseUrl;
+            $url = $this->_baseUrl;
         }
 
         if (is_array($data) && empty($data)) {
@@ -669,7 +658,7 @@ class OnePica_AvaTax16_IO_Curl
     {
         if (is_array($url)) {
             $data = $url;
-            $url = $this->baseUrl;
+            $url = $this->_baseUrl;
         }
 
         $this->setURL($url);
@@ -692,12 +681,12 @@ class OnePica_AvaTax16_IO_Curl
     {
         if (is_array($url)) {
             $data = $url;
-            $url = $this->baseUrl;
+            $url = $this->_baseUrl;
         }
         $this->setURL($url);
         $this->setOpt(CURLOPT_CUSTOMREQUEST, 'PUT');
         $put_data = $this->buildPostData($data);
-        if (empty($this->options[CURLOPT_INFILE]) && empty($this->options[CURLOPT_INFILESIZE])) {
+        if (empty($this->_options[CURLOPT_INFILE]) && empty($this->_options[CURLOPT_INFILESIZE])) {
             $this->setHeader('Content-Length', strlen($put_data));
         }
         $this->setOpt(CURLOPT_POSTFIELDS, $put_data);
@@ -739,8 +728,8 @@ class OnePica_AvaTax16_IO_Curl
      */
     public function setCookie($key, $value)
     {
-        $this->cookies[$key] = $value;
-        $this->setOpt(CURLOPT_COOKIE, str_replace(' ', '%20', urldecode(http_build_query($this->cookies, '', '; '))));
+        $this->_cookies[$key] = $value;
+        $this->setOpt(CURLOPT_COOKIE, str_replace(' ', '%20', urldecode(http_build_query($this->_cookies, '', '; '))));
     }
 
     /**
@@ -762,7 +751,7 @@ class OnePica_AvaTax16_IO_Curl
      */
     public function getResponseCookie($key)
     {
-        return isset($this->responseCookies[$key]) ? $this->responseCookies[$key] : null;
+        return isset($this->_responseCookies[$key]) ? $this->_responseCookies[$key] : null;
     }
 
     /**
@@ -816,7 +805,7 @@ class OnePica_AvaTax16_IO_Curl
      */
     public function setDefaultJsonDecoder()
     {
-        $this->jsonDecoder = function($response) {
+        $this->_jsonDecoder = function($response) {
             $json_obj = json_decode($response, false);
             if (!($json_obj === null)) {
                 $response = $json_obj;
@@ -860,9 +849,9 @@ class OnePica_AvaTax16_IO_Curl
      */
     public function setHeader($key, $value)
     {
-        $this->headers[$key] = $value;
+        $this->_headers[$key] = $value;
         $headers = array();
-        foreach ($this->headers as $key => $value) {
+        foreach ($this->_headers as $key => $value) {
             $headers[] = $key . ': ' . $value;
         }
         $this->setOpt(CURLOPT_HTTPHEADER, $headers);
@@ -877,7 +866,7 @@ class OnePica_AvaTax16_IO_Curl
     public function setJsonDecoder($function)
     {
         if (is_callable($function)) {
-            $this->jsonDecoder = $function;
+            $this->_jsonDecoder = $function;
         }
     }
 
@@ -900,8 +889,8 @@ class OnePica_AvaTax16_IO_Curl
             trigger_error($required_options[$option] . ' is a required option', E_USER_WARNING);
         }
 
-        $this->options[$option] = $value;
-        return curl_setopt($this->curl, $option, $value);
+        $this->_options[$option] = $value;
+        return curl_setopt($this->_curl, $option, $value);
     }
 
     /**
@@ -946,9 +935,9 @@ class OnePica_AvaTax16_IO_Curl
      */
     public function setURL($url, $data = array())
     {
-        $this->baseUrl = $url;
-        $this->url = $this->buildURL($url, $data);
-        $this->setOpt(CURLOPT_URL, $this->url);
+        $this->_baseUrl = $url;
+        $this->_url = $this->_buildURL($url, $data);
+        $this->setOpt(CURLOPT_URL, $this->_url);
     }
 
     /**
@@ -970,7 +959,7 @@ class OnePica_AvaTax16_IO_Curl
      */
     public function success($callback)
     {
-        $this->successFunction = $callback;
+        $this->_successFunction = $callback;
     }
 
     /**
@@ -982,7 +971,7 @@ class OnePica_AvaTax16_IO_Curl
     public function unsetHeader($key)
     {
         $this->setHeader($key, '');
-        unset($this->headers[$key]);
+        unset($this->_headers[$key]);
     }
 
     /**
@@ -1009,13 +998,13 @@ class OnePica_AvaTax16_IO_Curl
     /**
      * Build Url
      *
-     * @access private
+     * @access protected
      * @param  $url
      * @param  $data
      *
      * @return string
      */
-    private function buildURL($url, $data = array())
+    protected function _buildURL($url, $data = array())
     {
         return $url . (empty($data) ? '' : '?' . http_build_query($data));
     }
@@ -1023,15 +1012,15 @@ class OnePica_AvaTax16_IO_Curl
     /**
      * Parse Headers
      *
-     * @access private
+     * @access protected
      * @param  $raw_headers
      *
      * @return array
      */
-    private function parseHeaders($raw_headers)
+    protected function _parseHeaders($raw_headers)
     {
         $raw_headers = preg_split('/\r\n/', $raw_headers, null, PREG_SPLIT_NO_EMPTY);
-        $http_headers = new CaseInsensitiveArray();
+        $http_headers = new OnePica_AvaTax16_IO_CaseInsensitiveArray();
 
         $raw_headers_count = count($raw_headers);
         for ($i = 1; $i < $raw_headers_count; $i++) {
@@ -1052,15 +1041,15 @@ class OnePica_AvaTax16_IO_Curl
     /**
      * Parse Request Headers
      *
-     * @access private
+     * @access protected
      * @param  $raw_headers
      *
      * @return array
      */
-    private function parseRequestHeaders($raw_headers)
+    protected function _parseRequestHeaders($raw_headers)
     {
-        $request_headers = new CaseInsensitiveArray();
-        list($first_line, $headers) = $this->parseHeaders($raw_headers);
+        $request_headers = new OnePica_AvaTax16_IO_CaseInsensitiveArray();
+        list($first_line, $headers) = $this->_parseHeaders($raw_headers);
         $request_headers['Request-Line'] = $first_line;
         foreach ($headers as $key => $value) {
             $request_headers[$key] = $value;
@@ -1071,22 +1060,22 @@ class OnePica_AvaTax16_IO_Curl
     /**
      * Parse Response
      *
-     * @access private
+     * @access protected
      * @param  $response_headers
      * @param  $raw_response
      *
      * @return array
      */
-    private function parseResponse($response_headers, $raw_response)
+    protected function _parseResponse($response_headers, $raw_response)
     {
         $response = $raw_response;
         if (isset($response_headers['Content-Type'])) {
-            if (preg_match($this->jsonPattern, $response_headers['Content-Type'])) {
-                $json_decoder = $this->jsonDecoder;
+            if (preg_match($this->_jsonPattern, $response_headers['Content-Type'])) {
+                $json_decoder = $this->_jsonDecoder;
                 if (is_callable($json_decoder)) {
                     $response = $json_decoder($response);
                 }
-            } elseif (preg_match($this->xmlPattern, $response_headers['Content-Type'])) {
+            } elseif (preg_match($this->_xmlPattern, $response_headers['Content-Type'])) {
                 $xml_obj = @simplexml_load_string($response);
                 if (!($xml_obj === false)) {
                     $response = $xml_obj;
@@ -1100,12 +1089,12 @@ class OnePica_AvaTax16_IO_Curl
     /**
      * Parse Response Headers
      *
-     * @access private
+     * @access protected
      * @param  $raw_response_headers
      *
      * @return array
      */
-    private function parseResponseHeaders($raw_response_headers)
+    protected function _parseResponseHeaders($raw_response_headers)
     {
         $response_header_array = explode("\r\n\r\n", $raw_response_headers);
         $response_header  = '';
@@ -1116,8 +1105,8 @@ class OnePica_AvaTax16_IO_Curl
             }
         }
 
-        $response_headers = new CaseInsensitiveArray();
-        list($first_line, $headers) = $this->parseHeaders($response_header);
+        $response_headers = new OnePica_AvaTax16_IO_CaseInsensitiveArray();
+        list($first_line, $headers) = $this->_parseHeaders($response_header);
         $response_headers['Status-Line'] = $first_line;
         foreach ($headers as $key => $value) {
             $response_headers[$key] = $value;
@@ -1186,74 +1175,208 @@ class OnePica_AvaTax16_IO_Curl
 
         return (bool)count(array_filter($array, 'is_array'));
     }
-}
 
-class CaseInsensitiveArray implements \ArrayAccess, \Countable, \Iterator
-{
-    private $container = array();
-
-    public function offsetSet($offset, $value)
+    /**
+     * Get Error
+     *
+     * @return bool
+     */
+    public function getError()
     {
-        if ($offset === null) {
-            $this->container[] = $value;
-        } else {
-            $index = array_search(strtolower($offset), array_keys(array_change_key_case($this->container, CASE_LOWER)));
-            if (!($index === false)) {
-                $keys = array_keys($this->container);
-                unset($this->container[$keys[$index]]);
-            }
-            $this->container[$offset] = $value;
-        }
+        return $this->_error;
     }
 
-    public function offsetExists($offset)
+    /**
+     * Get Error Code
+     *
+     * @return int
+     */
+    public function getErrorCode()
     {
-        return array_key_exists(strtolower($offset), array_change_key_case($this->container, CASE_LOWER));
+        return $this->_errorCode;
     }
 
-    public function offsetUnset($offset)
+    /**
+     * Get Error Message
+     *
+     * @return string
+     */
+    public function getErrorMessage()
     {
-        unset($this->container[$offset]);
+        return $this->_errorMessage;
     }
 
-    public function offsetGet($offset)
+    /**
+     * Get Curl Error
+     *
+     * @return bool
+     */
+    public function getCurlError()
     {
-        $index = array_search(strtolower($offset), array_keys(array_change_key_case($this->container, CASE_LOWER)));
-        if ($index === false) {
-            return null;
-        }
-
-        $values = array_values($this->container);
-        return $values[$index];
+        return $this->_curlError;
     }
 
-    public function count()
+    /**
+     * Get Curl Error Code
+     *
+     * @return int
+     */
+    public function getCurlErrorCode()
     {
-        return count($this->container);
+        return $this->_curlErrorCode;
     }
 
-    public function current()
+    /**
+     * Get Curl Error Message
+     *
+     * @return string
+     */
+    public function getCurlErrorMessage()
     {
-        return current($this->container);
+        return $this->_curlErrorMessage;
     }
 
-    public function next()
+    /**
+     * Get Http Error
+     *
+     * @return bool
+     */
+    public function getHttpError()
     {
-        return next($this->container);
+        return $this->_httpError;
     }
 
-    public function key()
+    /**
+     * Get http Status Code
+     *
+     * @return int
+     */
+    public function getHttpStatusCode()
     {
-        return key($this->container);
+        return $this->_httpStatusCode;
     }
 
-    public function valid()
+    /**
+     * Get Http Error Message
+     *
+     * @return string
+     */
+    public function getHttpErrorMessage()
     {
-        return !($this->current() === false);
+        return $this->_httpErrorMessage;
     }
 
-    public function rewind()
+    /**
+     * Get Base Url
+     *
+     * @return string
+     */
+    public function getBaseUrl()
     {
-        reset($this->container);
+        return $this->_baseUrl;
+    }
+
+    /**
+     * Get Url
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->_url;
+    }
+
+    /**
+     * Get Request Headers
+     *
+     * @return array
+     */
+    public function getRequestHeaders()
+    {
+        return $this->_requestHeaders;
+    }
+
+    /**
+     * Get Response Headers
+     *
+     * @return array
+     */
+    public function getResponseHeaders()
+    {
+        return $this->_responseHeaders;
+    }
+
+    /**
+     * Get Raw Response Headers
+     *
+     * @return string
+     */
+    public function getRawResponseHeaders()
+    {
+        return $this->_rawResponseHeaders;
+    }
+
+    /**
+     * Get Response
+     *
+     * @return mixed
+     */
+    public function getResponse()
+    {
+        return $this->_response;
+    }
+
+    /**
+     * Get Raw Response
+     *
+     * @return string
+     */
+    public function getRawResponse()
+    {
+        return $this->_rawResponse;
+    }
+
+    /**
+     * Get Before Send Function
+     *
+     * @return string
+     */
+    public function getBeforeSendFunction()
+    {
+        return $this->_beforeSendFunction;
+    }
+
+    /**
+     * Set Before Send Function
+     *
+     * @param string $function
+     * @return $this
+     */
+    public function setBeforeSendFunction($function)
+    {
+        $this->_beforeSendFunction = $function;
+        return $this;
+    }
+
+    /**
+     * Get Download Complete Function
+     *
+     * @return string
+     */
+    public function getDownloadCompleteFunction()
+    {
+        return $this->_downloadCompleteFunction;
+    }
+
+    /**
+     * Get Download Complete Function
+     *
+     * @param string $function
+     * @return $this
+     */
+    public function setDownloadCompleteFunction($function)
+    {
+        $this->_downloadCompleteFunction = $function;
+        return $this;
     }
 }

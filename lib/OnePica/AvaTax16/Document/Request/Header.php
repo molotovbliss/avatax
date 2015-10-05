@@ -17,10 +17,22 @@
  */
 
 /**
- * Class OnePica_AvaTax16_Document_Part_Header
+ * Class OnePica_AvaTax16_Document_Request_Header
  */
-class OnePica_AvaTax16_Document_Part_Header extends OnePica_AvaTax16_Document_Part
+class OnePica_AvaTax16_Document_Request_Header extends OnePica_AvaTax16_Document_Part
 {
+    /**
+     * Types of complex properties
+     *
+     * @var array
+     */
+    protected $_propertyComplexTypes = array(
+        '_defaultLocations' => array(
+            'type' => 'OnePica_AvaTax16_Document_Part_Location',
+            'isArrayOf' => 'true'
+        ),
+    );
+
     /**
      * Required properties
      *
@@ -120,7 +132,7 @@ class OnePica_AvaTax16_Document_Part_Header extends OnePica_AvaTax16_Document_Pa
      * Default locations
      * (Required)
      *
-     * @var OnePica_AvaTax16_Document_Part_Locations
+     * @var OnePica_AvaTax16_Document_Part_Location[]
      */
     protected $_defaultLocations;
 
@@ -155,11 +167,19 @@ class OnePica_AvaTax16_Document_Part_Header extends OnePica_AvaTax16_Document_Pa
     protected $_metadata;
 
     /**
-     * Construct
+     * Set Metadata
+     *
+     * @param array|StdClass $value
+     * @return $this
      */
-    public function __construct()
+    public function setMetadata($value)
     {
-        // init document parts
-        $this->_defaultLocations = new OnePica_AvaTax16_Document_Part_Locations();
+        if ($value instanceof StdClass) {
+            // convert object data to array
+            // it is used during filling data from response
+            $this->_metadata = (array) $value;
+        } else {
+            $this->_metadata = $value;
+        }
     }
 }

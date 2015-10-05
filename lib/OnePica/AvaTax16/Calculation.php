@@ -25,7 +25,7 @@ class OnePica_AvaTax16_Calculation extends OnePica_AvaTax16_ResourceAbstract
      * Create Calculation
      *
      * @param OnePica_AvaTax16_Document_Request $documentRequest
-     * @return StdClass $data
+     * @return OnePica_AvaTax16_Document_Response $documentResponse
      */
     public function createCalculation($documentRequest)
     {
@@ -33,8 +33,10 @@ class OnePica_AvaTax16_Calculation extends OnePica_AvaTax16_ResourceAbstract
         $postData = $documentRequest->toArray();
         $curl = $this->_getCurlObjectWithHeaders();
         $curl->post($postUrl, $postData);
-        $data = $curl->response;
-        return $data;
+        $data = $curl->getResponse();
+        $documentResponse = new OnePica_AvaTax16_Document_Response();
+        $documentResponse->fillData($data);
+        return $documentResponse;
     }
 
     /**
@@ -60,7 +62,7 @@ class OnePica_AvaTax16_Calculation extends OnePica_AvaTax16_ResourceAbstract
 
         $curl = $this->_getCurlObjectWithHeaders();
         $curl->get($getUrl);
-        $data = $curl->response;
+        $data = $curl->getResponse();
         return $data;
     }
 
@@ -95,7 +97,7 @@ class OnePica_AvaTax16_Calculation extends OnePica_AvaTax16_ResourceAbstract
 
         $curl = $this->_getCurlObjectWithHeaders();
         $curl->get($getUrl, $filterData);
-        $data = $curl->response;
+        $data = $curl->getResponse();
 
         $result = null;
         if (is_array($data)) {

@@ -17,9 +17,10 @@
  */
 
 /**
- * Class OnePica_AvaTax16_Document_Request
+ * Class OnePica_AvaTax16_Document_Response_CalculatedTaxSummary
  */
-class OnePica_AvaTax16_Document_Request extends OnePica_AvaTax16_Document_Part
+class OnePica_AvaTax16_Document_Response_CalculatedTaxSummary
+    extends OnePica_AvaTax16_Document_Part
 {
     /**
      * Types of complex properties
@@ -27,36 +28,51 @@ class OnePica_AvaTax16_Document_Request extends OnePica_AvaTax16_Document_Part
      * @var array
      */
     protected $_propertyComplexTypes = array(
-        '_header' => array(
-            'type' => 'OnePica_AvaTax16_Document_Request_Header'
-        ),
-        '_lines' => array(
-            'type' => 'OnePica_AvaTax16_Document_Request_Line',
+        '_taxByType' => array(
+            'type' => 'OnePica_AvaTax16_Document_Response_CalculatedTaxSummary_TaxByType',
             'isArrayOf' => 'true'
-        ),
-        '_feedback' => array(
-            'type' => 'OnePica_AvaTax16_Document_Part_Feedback'
-        ),
+        )
     );
 
     /**
-     * Header
+     * Number Of Lines
      *
-     * @var OnePica_AvaTax16_Document_Request_Header
+     * @var int
      */
-    protected $_header;
+    protected $_numberOfLines;
 
     /**
-     * Lines
+     * Subtotal
      *
-     * @var OnePica_AvaTax16_Document_Request_Line[]
+     * @var float
      */
-    protected $_lines;
+    protected $_subtotal;
 
     /**
-     * Feedback
+     * Total Tax
      *
-     * @var OnePica_AvaTax16_Document_Part_Feedback
+     * @var float
      */
-    protected $_feedback;
+    protected $_totalTax;
+
+    /**
+     * Tax By Type
+     *
+     * @var OnePica_AvaTax16_Document_Response_CalculatedTaxSummary_TaxByType[]
+     */
+    protected $_taxByType;
+
+    /**
+     * Tax
+     *
+     * @var float
+     */
+    protected $_tax;
+
+    /**
+     * Grand Total
+     *
+     * @var float
+     */
+    protected $_grandTotal;
 }
