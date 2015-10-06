@@ -80,7 +80,7 @@ class OnePica_AvaTax16_TaxService extends OnePica_AvaTax16_ResourceAbstract
      */
     public function createCalculation($documentRequest)
     {
-        $calculationResource =$this->_getTaxResource('calculation');
+        $calculationResource = $this->_getTaxResource('calculation');
         $documentResponse = $calculationResource->createCalculation($documentRequest);
         return $documentResponse;
     }
@@ -94,7 +94,7 @@ class OnePica_AvaTax16_TaxService extends OnePica_AvaTax16_ResourceAbstract
      */
     public function getCalculation($transactionType, $documentCode)
     {
-        $calculationResource =$this->_getTaxResource('calculation');
+        $calculationResource = $this->_getTaxResource('calculation');
         $documentResponse = $calculationResource->getCalculation($transactionType, $documentCode);
         return $documentResponse;
     }
@@ -112,9 +112,40 @@ class OnePica_AvaTax16_TaxService extends OnePica_AvaTax16_ResourceAbstract
     public function getListOfCalculations($transactionType, $limit = null, $startDate = null, $endDate = null,
         $startCode = null)
     {
-        $calculationResource =$this->_getTaxResource('calculation');
+        $calculationResource = $this->_getTaxResource('calculation');
         $calculationListResponse = $calculationResource->getListOfCalculations($transactionType, $limit, $startDate,
             $endDate, $startCode);
         return $calculationListResponse;
+    }
+
+    /**
+     * Create Transaction
+     *
+     * @param OnePica_AvaTax16_Document_Request $documentRequest
+     * @return OnePica_AvaTax16_Document_Response $documentResponse
+     */
+    public function createTransaction($documentRequest)
+    {
+        $transactionResource = $this->_getTaxResource('transaction');
+        $documentResponse = $transactionResource->createTransaction($documentRequest);
+        return $documentResponse;
+    }
+
+    /**
+     * Create Transaction from Calculation
+     *
+     * @param string $transactionType
+     * @param string $documentCode
+     * @param bool $recalculate
+     * @param string $comment
+     * @return OnePica_AvaTax16_Document_Response $documentResponse
+     */
+    public function createTransactionFromCalculation($transactionType, $documentCode, $recalculate = null,
+        $comment = null)
+    {
+        $transactionResource = $this->_getTaxResource('transaction');
+        $documentResponse = $transactionResource->createTransactionFromCalculation($transactionType, $documentCode,
+            $recalculate, $comment);
+        return $documentResponse;
     }
 }
