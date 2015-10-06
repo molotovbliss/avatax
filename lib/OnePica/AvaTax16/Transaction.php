@@ -35,7 +35,10 @@ class OnePica_AvaTax16_Transaction extends OnePica_AvaTax16_ResourceAbstract
         $curl->post($postUrl, $postData);
         $data = $curl->getResponse();
         $documentResponse = new OnePica_AvaTax16_Document_Response();
-        $documentResponse->fillData($data);
+        $this->_setErrorDataToResponseIfExists($documentResponse, $curl);
+        if (!$documentResponse->getHasError()) {
+            $documentResponse->fillData($data);
+        }
         return $documentResponse;
     }
 
@@ -46,7 +49,7 @@ class OnePica_AvaTax16_Transaction extends OnePica_AvaTax16_ResourceAbstract
      * @param string $documentCode
      * @param bool $recalculate
      * @param string $comment
-     * @return StdClass $data
+     * @return OnePica_AvaTax16_Document_Response $documentResponse
      */
     public function createTransactionFromCalculation($transactionType, $documentCode, $recalculate = null,
         $comment = null)
@@ -73,7 +76,12 @@ class OnePica_AvaTax16_Transaction extends OnePica_AvaTax16_ResourceAbstract
         $curl = $this->_getCurlObjectWithHeaders();
         $curl->post($postUrl, $postData);
         $data = $curl->getResponse();
-        return $data;
+        $documentResponse = new OnePica_AvaTax16_Document_Response();
+        $this->_setErrorDataToResponseIfExists($documentResponse, $curl);
+        if (!$documentResponse->getHasError()) {
+            $documentResponse->fillData($data);
+        }
+        return $documentResponse;
     }
 
     /**
@@ -81,7 +89,7 @@ class OnePica_AvaTax16_Transaction extends OnePica_AvaTax16_ResourceAbstract
      *
      * @param string $transactionType
      * @param string $documentCode
-     * @return StdClass $data
+     * @return OnePica_AvaTax16_Document_Response $documentResponse
      */
     public function getTransaction($transactionType, $documentCode)
     {
@@ -100,7 +108,12 @@ class OnePica_AvaTax16_Transaction extends OnePica_AvaTax16_ResourceAbstract
         $curl = $this->_getCurlObjectWithHeaders();
         $curl->get($getUrl);
         $data = $curl->getResponse();
-        return $data;
+        $documentResponse = new OnePica_AvaTax16_Document_Response();
+        $this->_setErrorDataToResponseIfExists($documentResponse, $curl);
+        if (!$documentResponse->getHasError()) {
+            $documentResponse->fillData($data);
+        }
+        return $documentResponse;
     }
 
     /**
@@ -111,7 +124,7 @@ class OnePica_AvaTax16_Transaction extends OnePica_AvaTax16_ResourceAbstract
      * @param string $startDate
      * @param string $endDate
      * @param string $startCode (not implemented)
-     * @return StdClass|array $result
+     * @return OnePica_AvaTax16_Transaction_ListResponse $transactionListResponse
      */
     public function getListOfTransactions($transactionType, $limit = null, $startDate = null, $endDate = null,
         $startCode = null)
@@ -137,14 +150,12 @@ class OnePica_AvaTax16_Transaction extends OnePica_AvaTax16_ResourceAbstract
         $curl->get($getUrl, $filterData);
         $data = $curl->getResponse();
 
-        $result = null;
-        if (is_array($data)) {
-            foreach ($data as $dataItem) {
-                $transactionListItem = new OnePica_AvaTax16_Transaction_ListItemResponse();
-                $result[] = $transactionListItem->fillData($dataItem);
-            }
+        $transactionListResponse = new OnePica_AvaTax16_Transaction_ListResponse();
+        $this->_setErrorDataToResponseIfExists($transactionListResponse, $curl);
+        if (!$transactionListResponse->getHasError()) {
+            $transactionListResponse->fillData($data);
         }
-        return $result;
+        return $transactionListResponse;
     }
 
     /**
@@ -173,7 +184,10 @@ class OnePica_AvaTax16_Transaction extends OnePica_AvaTax16_ResourceAbstract
         $curl->get($getUrl);
         $data = $curl->getResponse();
         $transactionInput = new OnePica_AvaTax16_Document_Request();
-        $transactionInput->fillData($data);
+        $this->_setErrorDataToResponseIfExists($transactionInput, $curl);
+        if (!$transactionInput->getHasError()) {
+            $transactionInput->fillData($data);
+        }
         return $transactionInput;
     }
 
@@ -184,8 +198,7 @@ class OnePica_AvaTax16_Transaction extends OnePica_AvaTax16_ResourceAbstract
      * @param string $documentCode
      * @param string $type
      * @param string $comment
-     * @return bool
-     * @todo analise and refactor return value
+     * @return OnePica_AvaTax16_Transaction_TransitionTransactionStateResponse $transitionTransactionStateResponse
      */
     public function transitionTransactionState($transactionType, $documentCode, $type, $comment)
     {
@@ -209,7 +222,9 @@ class OnePica_AvaTax16_Transaction extends OnePica_AvaTax16_ResourceAbstract
 
         $curl = $this->_getCurlObjectWithHeaders();
         $curl->post($postUrl, $postData);
-
-        return ($curl->getHttpStatusCode() == 201) ? true : false;
+        $transitionTransactionStateResponse = new OnePica_AvaTax16_Transaction_TransitionTransactionStateResponse();
+        $this->_setErrorDataToResponseIfExists($transitionTransactionStateResponse, $curl);
+        $transitionTransactionStateResponse->setHttpStatus($curl->getHttpStatusCode());
+        return $transitionTransactionStateResponse;
     }
 }

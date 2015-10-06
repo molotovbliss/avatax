@@ -17,9 +17,9 @@
  */
 
 /**
- * Class OnePica_AvaTax16_Document_Request
+ * Class OnePica_AvaTax16_Transaction_ListResponse
  */
-class OnePica_AvaTax16_Document_Request extends OnePica_AvaTax16_Document_Part
+class OnePica_AvaTax16_Transaction_ListResponse extends OnePica_AvaTax16_Document_Part
 {
     /**
      * Has error
@@ -36,41 +36,27 @@ class OnePica_AvaTax16_Document_Request extends OnePica_AvaTax16_Document_Part
     protected $_errors;
 
     /**
-     * Types of complex properties
+     * List items
      *
-     * @var array
+     * @var OnePica_AvaTax16_Transaction_ListItemResponse[]
      */
-    protected $_propertyComplexTypes = array(
-        '_header' => array(
-            'type' => 'OnePica_AvaTax16_Document_Request_Header'
-        ),
-        '_lines' => array(
-            'type' => 'OnePica_AvaTax16_Document_Request_Line',
-            'isArrayOf' => 'true'
-        ),
-        '_feedback' => array(
-            'type' => 'OnePica_AvaTax16_Document_Part_Feedback'
-        ),
-    );
+    protected $_items;
 
     /**
-     * Header
+     * Fill data from object
      *
-     * @var OnePica_AvaTax16_Document_Request_Header
+     * @param StdClass|array $data
+     * @return $this
      */
-    protected $_header;
-
-    /**
-     * Lines
-     *
-     * @var OnePica_AvaTax16_Document_Request_Line[]
-     */
-    protected $_lines;
-
-    /**
-     * Feedback
-     *
-     * @var OnePica_AvaTax16_Document_Part_Feedback
-     */
-    protected $_feedback;
+    public function fillData($data)
+    {
+        $result = array();
+        if (is_array($data)) {
+            foreach ($data as $dataItem) {
+                $calculationListItem = new OnePica_AvaTax16_Transaction_ListItemResponse();
+                $result[] = $calculationListItem->fillData($dataItem);
+            }
+        }
+        $this->setItems($result);
+    }
 }
