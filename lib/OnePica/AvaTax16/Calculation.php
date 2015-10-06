@@ -82,7 +82,7 @@ class OnePica_AvaTax16_Calculation extends OnePica_AvaTax16_ResourceAbstract
      * @param string $startDate
      * @param string $endDate
      * @param string $startCode (not implemented)
-     * @return OnePica_AvaTax16_Calculation_ListItemResponse[] $result
+     * @return OnePica_AvaTax16_Calculation_ListResponse $calculationListResponse
      */
     public function getListOfCalculations($transactionType, $limit = null, $startDate = null, $endDate = null,
         $startCode = null)
@@ -107,13 +107,11 @@ class OnePica_AvaTax16_Calculation extends OnePica_AvaTax16_ResourceAbstract
         $curl->get($getUrl, $filterData);
         $data = $curl->getResponse();
 
-        $result = array();
-        if (is_array($data)) {
-            foreach ($data as $dataItem) {
-                $calculationListItem = new OnePica_AvaTax16_Calculation_ListItemResponse();
-                $result[] = $calculationListItem->fillData($dataItem);
-            }
+        $calculationListResponse = new OnePica_AvaTax16_Calculation_ListResponse();
+        $this->_setErrorDataToResponseIfExists($calculationListResponse, $curl);
+        if (!$calculationListResponse->getHasError()) {
+            $calculationListResponse->fillData($data);
         }
-        return $result;
+        return $calculationListResponse;
     }
 }
