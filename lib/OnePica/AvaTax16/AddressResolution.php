@@ -22,6 +22,11 @@
 class OnePica_AvaTax16_AddressResolution extends OnePica_AvaTax16_ResourceAbstract
 {
     /**
+     * Url path for address resolution
+     */
+    const ADDRESS_RESOLUTION_URL_PATH = '/address';
+
+    /**
      * Resolve a Single Address
      *
      * @param OnePica_AvaTax16_Document_Part_Location_Address $address
@@ -39,14 +44,12 @@ class OnePica_AvaTax16_AddressResolution extends OnePica_AvaTax16_ResourceAbstra
             . '/resolve';
 
         $postData = $address->toArray();
-        $curl = $this->_getCurlObjectWithHeaders();
-        $curl->post($postUrl, $postData);
-        $data = $curl->getResponse();
-        $result = new OnePica_AvaTax16_AddressResolution_ResolveSingleAddressResponse();
-        $this->_setErrorDataToResponseIfExists($result, $curl);
-        if (!$result->getHasError()) {
-            $result->fillData($data);
-        }
+        $requestOptions = array(
+            'requestType' => 'POST',
+            'data'        => $postData,
+            'returnClass' => 'OnePica_AvaTax16_AddressResolution_ResolveSingleAddressResponse'
+        );
+        $result = $this->_sendRequestAndGetResponseObject($postUrl, $requestOptions);
         return $result;
     }
 }

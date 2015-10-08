@@ -22,6 +22,16 @@
 class OnePica_AvaTax16_Transaction extends OnePica_AvaTax16_ResourceAbstract
 {
     /**
+     * Url path for calculations
+     */
+    const CALCULATION_URL_PATH = '/calculations';
+
+    /**
+     * Url path for transactions
+     */
+    const TRANSACTION_URL_PATH = '/transactions';
+
+    /**
      * Create Transaction
      *
      * @param OnePica_AvaTax16_Document_Request $documentRequest
@@ -31,14 +41,12 @@ class OnePica_AvaTax16_Transaction extends OnePica_AvaTax16_ResourceAbstract
     {
         $postUrl = $this->_config->getBaseUrl() . self::TRANSACTION_URL_PATH;
         $postData = $documentRequest->toArray();
-        $curl = $this->_getCurlObjectWithHeaders();
-        $curl->post($postUrl, $postData);
-        $data = $curl->getResponse();
-        $documentResponse = new OnePica_AvaTax16_Document_Response();
-        $this->_setErrorDataToResponseIfExists($documentResponse, $curl);
-        if (!$documentResponse->getHasError()) {
-            $documentResponse->fillData($data);
-        }
+        $requestOptions = array(
+            'requestType' => 'POST',
+            'data'        => $postData,
+            'returnClass' => 'OnePica_AvaTax16_Document_Response'
+        );
+        $documentResponse = $this->_sendRequestAndGetResponseObject($postUrl, $requestOptions);
         return $documentResponse;
     }
 
@@ -68,19 +76,17 @@ class OnePica_AvaTax16_Transaction extends OnePica_AvaTax16_ResourceAbstract
                  . self::TRANSACTION_URL_PATH;
 
         $postData = array(
-            'recalculate' => $recalculate,
+            'recalculate'  => $recalculate,
             'documentCode' => $documentCode,
-            'comment' => $comment
+            'comment'      => $comment
         );
 
-        $curl = $this->_getCurlObjectWithHeaders();
-        $curl->post($postUrl, $postData);
-        $data = $curl->getResponse();
-        $documentResponse = new OnePica_AvaTax16_Document_Response();
-        $this->_setErrorDataToResponseIfExists($documentResponse, $curl);
-        if (!$documentResponse->getHasError()) {
-            $documentResponse->fillData($data);
-        }
+        $requestOptions = array(
+            'requestType' => 'POST',
+            'data'        => $postData,
+            'returnClass' => 'OnePica_AvaTax16_Document_Response'
+        );
+        $documentResponse = $this->_sendRequestAndGetResponseObject($postUrl, $requestOptions);
         return $documentResponse;
     }
 
@@ -105,14 +111,11 @@ class OnePica_AvaTax16_Transaction extends OnePica_AvaTax16_ResourceAbstract
                 . '/'
                 . $documentCode;
 
-        $curl = $this->_getCurlObjectWithHeaders();
-        $curl->get($getUrl);
-        $data = $curl->getResponse();
-        $documentResponse = new OnePica_AvaTax16_Document_Response();
-        $this->_setErrorDataToResponseIfExists($documentResponse, $curl);
-        if (!$documentResponse->getHasError()) {
-            $documentResponse->fillData($data);
-        }
+        $requestOptions = array(
+            'requestType' => 'GET',
+            'returnClass' => 'OnePica_AvaTax16_Document_Response'
+        );
+        $documentResponse = $this->_sendRequestAndGetResponseObject($getUrl, $requestOptions);
         return $documentResponse;
     }
 
@@ -140,21 +143,18 @@ class OnePica_AvaTax16_Transaction extends OnePica_AvaTax16_ResourceAbstract
                 . $transactionType;
 
         $filterData = array(
-            'limit' => $limit,
+            'limit'     => $limit,
             'startDate' => $startDate,
-            'endDate' => $endDate,
+            'endDate'   => $endDate,
             'startCode' => $startCode,
         );
 
-        $curl = $this->_getCurlObjectWithHeaders();
-        $curl->get($getUrl, $filterData);
-        $data = $curl->getResponse();
-
-        $transactionListResponse = new OnePica_AvaTax16_Transaction_ListResponse();
-        $this->_setErrorDataToResponseIfExists($transactionListResponse, $curl);
-        if (!$transactionListResponse->getHasError()) {
-            $transactionListResponse->fillData($data);
-        }
+        $requestOptions = array(
+            'requestType' => 'GET',
+            'data'        => $filterData,
+            'returnClass' => 'OnePica_AvaTax16_Transaction_ListResponse'
+        );
+        $transactionListResponse = $this->_sendRequestAndGetResponseObject($getUrl, $requestOptions);
         return $transactionListResponse;
     }
 
@@ -180,14 +180,11 @@ class OnePica_AvaTax16_Transaction extends OnePica_AvaTax16_ResourceAbstract
                 . $documentCode
                 . '/source';
 
-        $curl = $this->_getCurlObjectWithHeaders();
-        $curl->get($getUrl);
-        $data = $curl->getResponse();
-        $transactionInput = new OnePica_AvaTax16_Document_Request();
-        $this->_setErrorDataToResponseIfExists($transactionInput, $curl);
-        if (!$transactionInput->getHasError()) {
-            $transactionInput->fillData($data);
-        }
+        $requestOptions = array(
+            'requestType' => 'GET',
+            'returnClass' => 'OnePica_AvaTax16_Document_Request'
+        );
+        $transactionInput = $this->_sendRequestAndGetResponseObject($getUrl, $requestOptions);
         return $transactionInput;
     }
 
@@ -216,7 +213,7 @@ class OnePica_AvaTax16_Transaction extends OnePica_AvaTax16_ResourceAbstract
             . '/stateTransitions';
 
         $postData = array(
-            'type' => $type,
+            'type'    => $type,
             'comment' => $comment
         );
 
