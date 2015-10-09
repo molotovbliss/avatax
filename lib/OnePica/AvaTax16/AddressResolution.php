@@ -52,4 +52,26 @@ class OnePica_AvaTax16_AddressResolution extends OnePica_AvaTax16_ResourceAbstra
         $result = $this->_sendRequestAndGetResponseObject($postUrl, $requestOptions);
         return $result;
     }
+
+    /**
+     * Ping
+     * Is used to test if service is available
+     *
+     * @return OnePica_AvaTax16_AddressResolution_PingResponse $pingResponse
+     */
+    public function ping()
+    {
+        // set default address to ping API service
+        $address = new OnePica_AvaTax16_Document_Part_Location_Address();
+        $address->setLine1('2601 West Marina Place');
+        $address->setCity('Seattle');
+        $address->setState('WA');
+        $address->setCountry('USA');
+        $resolvedAddress = $this->resolveSingleAddress($address);
+        // set data to response object
+        $pingResponse = new OnePica_AvaTax16_AddressResolution_PingResponse();
+        $pingResponse->setHasError($resolvedAddress->getHasError());
+        $pingResponse->setErrors($resolvedAddress->getErrors());
+        return $pingResponse;
+    }
 }
