@@ -279,7 +279,7 @@ class OnePica_AvaTax_Model_Avatax_Estimate extends OnePica_AvaTax_Model_Avatax_A
     /**
      * Adds shipping cost to request as item
      *
-     * @param Mage_Sales_Model_Quote_Address
+     * @param OnePica_AvaTax_Model_Sales_Quote_Address $address
      * @return int
      */
     protected function _addShipping($address)
@@ -287,21 +287,24 @@ class OnePica_AvaTax_Model_Avatax_Estimate extends OnePica_AvaTax_Model_Avatax_A
         $lineNumber = count($this->_lines);
         $storeId = $address->getQuote()->getStore()->getId();
         $taxClass = Mage::helper('tax')->getShippingTaxClass($storeId);
-        $shippingAmount = (float) $address->getBaseShippingAmount();
+        $shippingAmount = max(
+            0.0, (float)$address->getBaseShippingAmount() - $address->getBaseShippingDiscountAmount()
+        );
 
         $line = new Line();
         $line->setNo($lineNumber);
-        $shippingSku = Mage::helper('avatax')->getShippingSku($storeId);
-        $line->setItemCode($shippingSku ? $shippingSku : 'Shipping');
+        $shippingSku = $this->_getDataHelper()->getShippingSku($storeId);
+        $line->setItemCode($shippingSku ?: 'Shipping');
         $line->setDescription('Shipping costs');
         $line->setTaxCode($taxClass);
         $line->setQty(1);
         $line->setAmount($shippingAmount);
-        $line->setDiscounted(false);
+        $line->setDiscounted($address->getBaseShippingDiscountAmount() ? true : false);
 
         $this->_lines[$lineNumber] = $line;
         $this->_request->setLines($this->_lines);
-        $this->_lineToLineId[$lineNumber] = Mage::helper('avatax')->getShippingSku($storeId);
+        $this->_lineToLineId[$lineNumber] = $this->_getDataHelper()->getShippingSku($storeId);
+
         return $lineNumber;
     }
 
