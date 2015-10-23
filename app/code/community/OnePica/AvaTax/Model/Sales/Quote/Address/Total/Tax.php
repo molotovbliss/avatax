@@ -39,7 +39,7 @@ class OnePica_AvaTax_Model_Sales_Quote_Address_Total_Tax extends Mage_Sales_Mode
      * this could be a problem, but Avatax doesn't support those locations yet.
      *
      * @param   Mage_Sales_Model_Quote_Address $address
-     * @return  Mage_Tax_Model_Sales_Total_Quote
+     * @return  $this
      */
     public function collect(Mage_Sales_Model_Quote_Address $address)
     {
@@ -97,6 +97,7 @@ class OnePica_AvaTax_Model_Sales_Quote_Address_Total_Tax extends Mage_Sales_Mode
 
                 if ($address->getAddressType() == Mage_Sales_Model_Quote_Address::TYPE_SHIPPING
                     || $address->getUseForShipping()
+                    || $this->_isBillingUseForShipping()
                 ) {
                     $shippingItem = new Varien_Object();
                     $shippingItem->setSku(Mage::helper('avatax')->getShippingSku($store->getId()));
@@ -153,6 +154,18 @@ class OnePica_AvaTax_Model_Sales_Quote_Address_Total_Tax extends Mage_Sales_Mode
         }
 
         return $this;
+    }
+
+    /**
+     * Is billing address use for shipping
+     *
+     * @return bool
+     */
+    protected function _isBillingUseForShipping()
+    {
+        $data = Mage::app()->getRequest()->getPost('billing', array());
+
+        return isset($data['use_for_shipping']) ? (bool)$data['use_for_shipping'] : false;
     }
 
     /**
