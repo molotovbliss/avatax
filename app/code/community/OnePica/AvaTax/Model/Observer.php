@@ -477,9 +477,8 @@ class OnePica_AvaTax_Model_Observer extends Mage_Core_Model_Abstract
     {
         $quote = $this->_getQuote();
         $quote->collectTotals();
-        if ($quote->getData('estimate_tax_error')) {
-            $this->_getDataHelper()->addErrorMessage($quote->getStoreId());
-        }
+        $this->_addErrorMessage($quote);
+
         return $this;
     }
 
@@ -642,5 +641,20 @@ class OnePica_AvaTax_Model_Observer extends Mage_Core_Model_Abstract
             $this->_getDataHelper()->getTaxableCountryByCurrentScope(),
             $this->_getDataHelper()->getAddressValidationCountries()
         );
+    }
+
+    /**
+     * Added error message
+     *
+     * @param Mage_Sales_Model_Quote $quote
+     * @return $this
+     */
+    protected function _addErrorMessage($quote)
+    {
+        if ($quote->getData('estimate_tax_error')) {
+            $this->_getDataHelper()->addErrorMessage($quote->getStoreId());
+        }
+
+        return $this;
     }
 }
