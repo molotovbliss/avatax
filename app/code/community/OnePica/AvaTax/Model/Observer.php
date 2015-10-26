@@ -462,9 +462,14 @@ class OnePica_AvaTax_Model_Observer extends Mage_Core_Model_Abstract
      * @param Varien_Event_Observer $observer
      * @return $this
      */
-    public function controllerActionPredispatchCheckoutCartIndex(Varien_Event_Observer $observer)
+    public function checkoutCartSaveAfter(Varien_Event_Observer $observer)
     {
-        $this->_handleTaxEstimation();
+        $requestPath = $this->_getRequestPath();
+        if ($requestPath === 'checkout/cart/index') {
+            $quote = $this->_getQuote();
+            $this->_addErrorMessage($quote);
+        }
+
         return $this;
     }
 
@@ -656,5 +661,21 @@ class OnePica_AvaTax_Model_Observer extends Mage_Core_Model_Abstract
         }
 
         return $this;
+    }
+
+    /**
+     * Get request path
+     *
+     * Example: module_name/controller_name/action_name
+     *
+     * @return string
+     */
+    protected function _getRequestPath()
+    {
+        $requestPath = Mage::app()->getRequest()->getModuleName()
+                       . '/' . Mage::app()->getRequest()->getControllerName()
+                       . '/' . Mage::app()->getRequest()->getActionName();
+
+        return $requestPath;
     }
 }

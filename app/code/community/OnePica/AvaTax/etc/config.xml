@@ -192,16 +192,16 @@
                         <method>controllerActionPredispatchCheckoutOnepageIndex</method>
                     </avatax>
                 </observers>
-            </controller_action_predispatch_checkout_onepage_index>            
-            <controller_action_predispatch_checkout_cart_index>
+            </controller_action_predispatch_checkout_onepage_index>
+            <checkout_cart_save_after>
                 <observers>
                     <avatax>
                         <type>singleton</type>
                         <class>avatax/observer</class>
-                        <method>controllerActionPredispatchCheckoutCartIndex</method>
+                        <method>checkoutCartSaveAfter</method>
                     </avatax>
                 </observers>
-            </controller_action_predispatch_checkout_cart_index>
+            </checkout_cart_save_after>
             <controller_action_postdispatch_checkout_cart_estimatePost>
                 <observers>
                     <avatax>
