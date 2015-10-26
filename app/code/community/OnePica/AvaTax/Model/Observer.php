@@ -665,17 +665,16 @@ class OnePica_AvaTax_Model_Observer extends Mage_Core_Model_Abstract
 
     /**
      * Get request path
-     *
      * Example: module_name/controller_name/action_name
      *
      * @return string
      */
     protected function _getRequestPath()
     {
-        $requestPath = Mage::app()->getRequest()->getModuleName()
-                       . '/' . Mage::app()->getRequest()->getControllerName()
-                       . '/' . Mage::app()->getRequest()->getActionName();
+        $request = Mage::app()->getRequest();
 
-        return $requestPath;
+        return $request->getModuleName()
+               . '/' . $request->getControllerName()
+               . '/' . $request->getActionName();
     }
 }
