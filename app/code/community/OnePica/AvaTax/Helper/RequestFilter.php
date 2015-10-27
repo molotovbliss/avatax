@@ -37,19 +37,53 @@ class OnePica_AvaTax_Helper_RequestFilter extends Mage_Core_Helper_Abstract
     public function isRequestFiltered($store)
     {
         $requestPath = $this->_getRequestPath();
-        if ($this->_getConfig(self::XML_PATH_TO_LIMIT_GET_TAX_REQUEST_ON_CHECKOUT_ONEPAGE, $store)
-            && in_array($requestPath, $this->_getCheckoutActions(), true)
-        ) {
+        if ($this->_isOnePageCheckoutRequestFiltered($store, $requestPath)) {
             return true;
         }
 
-        if ($this->_getConfig(self::XML_PATH_TO_LIMIT_GET_TAX_REQUEST_ON_MULTISHIPPING_CHECKOUT, $store)
-            && in_array($requestPath, $this->_getMultiShippingCheckoutActions(), true)
-        ) {
+        if ($this->_isMultishippingCheckoutRequestFiltered($store, $requestPath)) {
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Get request path
+     * Example: module_name/controller_name/action_name
+     *
+     * @return string
+     */
+    protected function _getRequestPath()
+    {
+        return $this->_getRequest()->getModuleName()
+               . '/' . $this->_getRequest()->getControllerName()
+               . '/' . $this->_getRequest()->getActionName();
+    }
+
+    /**
+     * Checks, if one page checkout request are filtering
+     *
+     * @param Mage_Core_Model_Store|int $store
+     * @param string                    $requestPath
+     * @return bool
+     */
+    protected function _isOnePageCheckoutRequestFiltered($store, $requestPath)
+    {
+        return $this->_getConfig(self::XML_PATH_TO_LIMIT_GET_TAX_REQUEST_ON_CHECKOUT_ONEPAGE, $store)
+               && in_array($requestPath, $this->_getCheckoutActions(), true);
+    }
+
+    /**
+     * Returns a config value from the admin.
+     *
+     * @param string                    $path
+     * @param Mage_Core_Model_Store|int $store
+     * @return string
+     */
+    protected function _getConfig($path, $store = null)
+    {
+        return Mage::getSingleton('avatax/config')->getConfig($path, $store);
     }
 
     /**
@@ -68,6 +102,19 @@ class OnePica_AvaTax_Helper_RequestFilter extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Checks, if multi shipping checkout request are filtering
+     *
+     * @param Mage_Core_Model_Store|int $store
+     * @param string                    $requestPath
+     * @return bool
+     */
+    protected function _isMultishippingCheckoutRequestFiltered($store, $requestPath)
+    {
+        return $this->_getConfig(self::XML_PATH_TO_LIMIT_GET_TAX_REQUEST_ON_MULTISHIPPING_CHECKOUT, $store)
+               && in_array($requestPath, $this->_getMultiShippingCheckoutActions(), true);
+    }
+
+    /**
      * Get multiple checkout actions
      *
      * @return array
@@ -82,31 +129,5 @@ class OnePica_AvaTax_Helper_RequestFilter extends Mage_Core_Helper_Abstract
             'checkout/multishipping/shippingPost',
             'checkout/multishipping/billing'
         );
-    }
-
-    /**
-     * Get request path
-     *
-     * Example: module_name/controller_name/action_name
-     *
-     * @return string
-     */
-    protected function _getRequestPath()
-    {
-        return $this->_getRequest()->getModuleName()
-               . '/' . $this->_getRequest()->getControllerName()
-               . '/' . $this->_getRequest()->getActionName();
-    }
-
-    /**
-     * Returns a config value from the admin.
-     *
-     * @param string $path
-     * @param Mage_Core_Model_Store|int $store
-     * @return string
-     */
-    protected function _getConfig ($path, $store = null)
-    {
-        return Mage::getSingleton('avatax/config')->getConfig($path, $store);
     }
 }
