@@ -19,12 +19,41 @@
 class OnePica_AvaTax_Helper_RequestFilter extends Mage_Core_Helper_Abstract
 {
     /**
+     * XMl path to limit get tax request on checkout onepage actions
+     */
+    const XML_PATH_TO_LIMIT_GET_TAX_REQUEST_ON_CHECKOUT_ONEPAGE = 'limit_gettax_request_on_checkout_onepage_actions';
+
+    /**
      * Checks if request is filtered
      *
      * @param Mage_Core_Model_Store|int $store
+     * @return bool
      */
     public function isRequestFiltered($store)
     {
+        $requestPath = $this->_getRequestPath();
+        if ($this->_getConfig(self::XML_PATH_TO_LIMIT_GET_TAX_REQUEST_ON_CHECKOUT_ONEPAGE, $store)
+            && in_array($requestPath, $this->_getCheckoutActions(), true)
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get checkout actions
+     *
+     * @return array
+     */
+    protected function _getCheckoutActions()
+    {
+        return array(
+            'checkout/onepage/index',
+            'checkout/onepage/saveBilling',
+            'checkout/onepage/saveShipping',
+            'checkout/onepage/saveShippingMethod'
+        );
     }
 
     /**
