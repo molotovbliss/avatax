@@ -28,6 +28,20 @@ class OnePica_AvaTax_Helper_RequestFilter extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Get request path
+     *
+     * Example: module_name/controller_name/action_name
+     *
+     * @return string
+     */
+    protected function _getRequestPath()
+    {
+        return $this->_getRequest()->getModuleName()
+               . '/' . $this->_getRequest()->getControllerName()
+               . '/' . $this->_getRequest()->getActionName();
+    }
+
+    /**
      * Returns a config value from the admin.
      *
      * @param string $path
