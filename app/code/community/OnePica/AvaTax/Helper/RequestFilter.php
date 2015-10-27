@@ -19,6 +19,15 @@
 class OnePica_AvaTax_Helper_RequestFilter extends Mage_Core_Helper_Abstract
 {
     /**
+     * Checks if request is filtered
+     *
+     * @param Mage_Core_Model_Store|int $store
+     */
+    public function isRequestFiltered($store)
+    {
+    }
+
+    /**
      * Returns a config value from the admin.
      *
      * @param string $path
