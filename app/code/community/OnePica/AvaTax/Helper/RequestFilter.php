@@ -24,6 +24,11 @@ class OnePica_AvaTax_Helper_RequestFilter extends Mage_Core_Helper_Abstract
     const XML_PATH_TO_LIMIT_GET_TAX_REQUEST_ON_CHECKOUT_ONEPAGE = 'limit_gettax_request_on_checkout_onepage_actions';
 
     /**
+     * XML path to limit get tax request on multi shipping checkout actions
+     */
+    const XML_PATH_TO_LIMIT_GET_TAX_REQUEST_ON_MULTISHIPPING_CHECKOUT = 'limit_gettax_request_on_multishipping_checkout_actions';
+
+    /**
      * Checks if request is filtered
      *
      * @param Mage_Core_Model_Store|int $store
@@ -34,6 +39,12 @@ class OnePica_AvaTax_Helper_RequestFilter extends Mage_Core_Helper_Abstract
         $requestPath = $this->_getRequestPath();
         if ($this->_getConfig(self::XML_PATH_TO_LIMIT_GET_TAX_REQUEST_ON_CHECKOUT_ONEPAGE, $store)
             && in_array($requestPath, $this->_getCheckoutActions(), true)
+        ) {
+            return true;
+        }
+
+        if ($this->_getConfig(self::XML_PATH_TO_LIMIT_GET_TAX_REQUEST_ON_MULTISHIPPING_CHECKOUT, $store)
+            && in_array($requestPath, $this->_getMultiShippingCheckoutActions(), true)
         ) {
             return true;
         }
@@ -53,6 +64,23 @@ class OnePica_AvaTax_Helper_RequestFilter extends Mage_Core_Helper_Abstract
             'checkout/onepage/saveBilling',
             'checkout/onepage/saveShipping',
             'checkout/onepage/saveShippingMethod'
+        );
+    }
+
+    /**
+     * Get multiple checkout actions
+     *
+     * @return array
+     */
+    protected function _getMultiShippingCheckoutActions()
+    {
+        return array(
+            'checkout/multishipping/index',
+            'checkout/multishipping/addresses',
+            'checkout/multishipping/addressesPost',
+            'checkout/multishipping/shipping',
+            'checkout/multishipping/shippingPost',
+            'checkout/multishipping/billing'
         );
     }
 
