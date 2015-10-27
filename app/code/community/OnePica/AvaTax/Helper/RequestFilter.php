@@ -18,4 +18,15 @@
  */
 class OnePica_AvaTax_Helper_RequestFilter extends Mage_Core_Helper_Abstract
 {
+    /**
+     * Returns a config value from the admin.
+     *
+     * @param string $path
+     * @param Mage_Core_Model_Store|int $store
+     * @return string
+     */
+    protected function _getConfig ($path, $store = null)
+    {
+        return Mage::getSingleton('avatax/config')->getConfig($path, $store);
+    }
 }
