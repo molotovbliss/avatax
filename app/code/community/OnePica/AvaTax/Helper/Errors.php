@@ -30,10 +30,14 @@ class OnePica_AvaTax_Helper_Errors extends Mage_Core_Helper_Abstract
     const CALCULATE_ERROR_MESSAGE_IDENTIFIER = 'avatax_calculate_error';
 
     /**
+     * Identifier for estimation error message
+     */
+    const ESTIMATION_FAILED_ERROR_MESSAGE_IDENTIFIER = 'avatax_estimation_error';
+
+    /**
      * Identifier for validation notice
      */
     const VALIDATION_NOTICE_IDENTIFIER = 'avatax_validation_notice';
-
 
     /**
      * Adds error message if there is an error
@@ -140,5 +144,16 @@ class OnePica_AvaTax_Helper_Errors extends Mage_Core_Helper_Abstract
         } else {
             return false;
         }
+    }
+
+    /**
+     * Returns configured full stop on error mode
+     *
+     * @param null|int $storeId
+     * @return bool
+     */
+    public function getFullStopOnError($storeId = null)
+    {
+        return $this->_getConfigHelper()->fullStopOnError($storeId);
     }
 }

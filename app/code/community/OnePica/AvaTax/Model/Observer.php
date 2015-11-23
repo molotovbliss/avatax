@@ -599,8 +599,13 @@ class OnePica_AvaTax_Model_Observer extends Mage_Core_Model_Abstract
      */
     protected function _addErrorMessage($quote)
     {
-        if ($quote->getData('estimate_tax_error')) {
-            $this->_getErrorsHelper()->addErrorMessage($quote->getStoreId());
+        if ($this->_getErrorsHelper()->getFullStopOnError()) {
+            if ($quote->getData('estimate_tax_error')) {
+                $message = Mage::helper('avatax/config')->getErrorEstimateFrontendMessage();
+                $error = Mage::getSingleton('core/message')->error($message);
+                $error->setIdentifier(OnePica_AvaTax_Helper_Errors::ESTIMATION_FAILED_ERROR_MESSAGE_IDENTIFIER);
+                Mage::getSingleton('core/session')->addMessage($error);
+            }
         }
 
         return $this;
