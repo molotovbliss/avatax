@@ -34,6 +34,10 @@ class OnePica_AvaTax_Helper_Errors extends Mage_Core_Helper_Abstract
      */
     const VALIDATION_NOTICE_IDENTIFIER = 'avatax_validation_notice';
 
+    /**
+     * Identifier for estimation error message
+     */
+    const ESTIMATION_FAILED_ERROR_MESSAGE_IDENTIFIER = 'avatax_estimation_error';
 
     /**
      * Adds error message if there is an error
@@ -42,9 +46,9 @@ class OnePica_AvaTax_Helper_Errors extends Mage_Core_Helper_Abstract
      *
      * @return string
      */
-    public function addErrorMessage($store = null)
+    public function addErrorMessage($store = null, $idMessage = self::CALCULATE_ERROR_MESSAGE_IDENTIFIER)
     {
-        $message = $this->getErrorMessage($store);
+        $message = $this->getErrorMessage($store, $idMessage);
         if (Mage::app()->getStore()->isAdmin()) {
             /** @var Mage_Adminhtml_Model_Session_Quote $session */
             $session = Mage::getSingleton('adminhtml/session_quote');
@@ -54,10 +58,10 @@ class OnePica_AvaTax_Helper_Errors extends Mage_Core_Helper_Abstract
         }
 
         $messages = $session->getMessages();
-        if (!$messages->getMessageByIdentifier(self::CALCULATE_ERROR_MESSAGE_IDENTIFIER)) {
+        if (!$messages->getMessageByIdentifier($idMessage)) {
             /** @var Mage_Core_Model_Message_Error $error */
             $error = Mage::getSingleton('core/message')->error($message);
-            $error->setIdentifier(self::CALCULATE_ERROR_MESSAGE_IDENTIFIER);
+            $error->setIdentifier($idMessage);
             $session->addMessage($error);
         }
         return $message;
@@ -68,7 +72,7 @@ class OnePica_AvaTax_Helper_Errors extends Mage_Core_Helper_Abstract
      *
      * @return $this
      */
-    public function removeErrorMessage()
+    public function removeErrorMessage($idMessage = self::CALCULATE_ERROR_MESSAGE_IDENTIFIER)
     {
         if (Mage::app()->getStore()->isAdmin()) {
             /** @var Mage_Adminhtml_Model_Session_Quote $session */
@@ -79,7 +83,7 @@ class OnePica_AvaTax_Helper_Errors extends Mage_Core_Helper_Abstract
         }
         /** @var Mage_Core_Model_Message_Collection $messages */
         $messages = $session->getMessages();
-        $messages->deleteMessageByIdentifier(self::CALCULATE_ERROR_MESSAGE_IDENTIFIER);
+        $messages->deleteMessageByIdentifier($idMessage);
         return $this;
     }
 
@@ -90,12 +94,21 @@ class OnePica_AvaTax_Helper_Errors extends Mage_Core_Helper_Abstract
      *
      * @return string
      */
-    public function getErrorMessage($store = null)
+    public function getErrorMessage($store = null, $idMessage = self::CALCULATE_ERROR_MESSAGE_IDENTIFIER)
     {
         if (Mage::app()->getStore()->isAdmin()) {
             return Mage::helper('avatax/config')->getErrorBackendMessage($store);
         } else {
-            return Mage::helper('avatax/config')->getErrorFrontendMessage($store);
+            switch ($idMessage) {
+                case self::ESTIMATION_FAILED_ERROR_MESSAGE_IDENTIFIER:
+                    $message = Mage::helper('avatax/config')->getErrorEstimateFrontendMessage($store);
+                    break;
+                case self::CALCULATE_ERROR_MESSAGE_IDENTIFIER:
+                default:
+                    $message = Mage::helper('avatax/config')->getErrorFrontendMessage($store);
+                    break;
+            }
+            return $message;
         }
     }
 
@@ -140,5 +153,16 @@ class OnePica_AvaTax_Helper_Errors extends Mage_Core_Helper_Abstract
         } else {
             return false;
         }
+    }
+
+    /**
+     * Returns configured full stop on error mode
+     *
+     * @param null|int $storeId
+     * @return bool
+     */
+    public function getFullStopOnError($storeId = null)
+    {
+        return $this->_getConfigHelper()->fullStopOnError($storeId);
     }
 }

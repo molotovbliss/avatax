@@ -130,6 +130,11 @@ class OnePica_AvaTax_Helper_Config extends Mage_Core_Helper_Abstract
     const CALCULATE_ERROR_FRONTEND_MESSAGE = 'tax/avatax/error_frontend_message';
 
     /**
+     * Path to estimate error frontend message
+     */
+    const ESTIMATE_ERROR_FRONTEND_MESSAGE = 'tax/avatax/error_frontend_estimate_message';
+
+    /**
      * Path to is address normalization on
      */
     const XML_PATH_TO_TAX_AVATAX_NORMALIZE_ADDRESS = 'tax/avatax/normalize_address';
@@ -495,6 +500,17 @@ class OnePica_AvaTax_Helper_Config extends Mage_Core_Helper_Abstract
     public function getErrorFrontendMessage($storeId = null)
     {
         return Mage::getStoreConfig(self::CALCULATE_ERROR_FRONTEND_MESSAGE, $storeId);
+    }
+
+    /**
+     * Get estimate frontend message
+     *
+     * @param int|Mage_Core_Model_Store $storeId
+     * @return mixed
+     */
+    public function getErrorEstimateFrontendMessage($storeId = null)
+    {
+        return Mage::getStoreConfig(self::ESTIMATE_ERROR_FRONTEND_MESSAGE, $storeId);
     }
 
     /**
