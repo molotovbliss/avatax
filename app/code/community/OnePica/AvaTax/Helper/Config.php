@@ -135,8 +135,6 @@ class OnePica_AvaTax_Helper_Config extends Mage_Core_Helper_Abstract
     const ESTIMATE_ERROR_FRONTEND_MESSAGE = 'tax/avatax/error_frontend_estimate_message';
 
     /**
-
-    /**
      * Path to is address normalization on
      */
     const XML_PATH_TO_TAX_AVATAX_NORMALIZE_ADDRESS = 'tax/avatax/normalize_address';
