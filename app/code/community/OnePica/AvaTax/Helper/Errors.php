@@ -48,6 +48,8 @@ class OnePica_AvaTax_Helper_Errors extends Mage_Core_Helper_Abstract
      */
     public function addErrorMessage($store = null, $idMessage = self::CALCULATE_ERROR_MESSAGE_IDENTIFIER)
     {
+        $idMessage = (isset($idMessage)) ? $idMessage : self::CALCULATE_ERROR_MESSAGE_IDENTIFIER;
+
         $message = $this->getErrorMessage($store, $idMessage);
         if (Mage::app()->getStore()->isAdmin()) {
             /** @var Mage_Adminhtml_Model_Session_Quote $session */
@@ -72,8 +74,10 @@ class OnePica_AvaTax_Helper_Errors extends Mage_Core_Helper_Abstract
      *
      * @return $this
      */
-    public function removeErrorMessage($idMessage = self::CALCULATE_ERROR_MESSAGE_IDENTIFIER)
+    public function removeErrorMessage($idMessage = null)
     {
+        $idMessage = (isset($idMessage)) ? $idMessage : self::CALCULATE_ERROR_MESSAGE_IDENTIFIER;
+
         if (Mage::app()->getStore()->isAdmin()) {
             /** @var Mage_Adminhtml_Model_Session_Quote $session */
             $session = Mage::getSingleton('adminhtml/session_quote');
@@ -94,7 +98,7 @@ class OnePica_AvaTax_Helper_Errors extends Mage_Core_Helper_Abstract
      *
      * @return string
      */
-    public function getErrorMessage($store = null, $idMessage = self::CALCULATE_ERROR_MESSAGE_IDENTIFIER)
+    public function getErrorMessage($store = null, $idMessage = null)
     {
         if (Mage::app()->getStore()->isAdmin()) {
             return Mage::helper('avatax/config')->getErrorBackendMessage($store);
