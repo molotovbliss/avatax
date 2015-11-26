@@ -46,7 +46,7 @@ class OnePica_AvaTax_Helper_Errors extends Mage_Core_Helper_Abstract
      *
      * @return string
      */
-    public function addErrorMessage($store = null, $idMessage = self::CALCULATE_ERROR_MESSAGE_IDENTIFIER)
+    public function addErrorMessage($store = null, $idMessage = null)
     {
         $idMessage = (isset($idMessage)) ? $idMessage : self::CALCULATE_ERROR_MESSAGE_IDENTIFIER;
 
